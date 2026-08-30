@@ -4,66 +4,64 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Transmisión en Vivo</title>
+    <!-- Librería HLS.js compatible con Android -->
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
     <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: Arial, sans-serif; }
-        body { background-color: #0e0e10; color: #fff; display: flex; flex-direction: column; height: 100vh; }
-        
-        /* Header */
-        header { background-color: #18181b; padding: 10px 20px; display: flex; align-items: center; gap: 10px; border-bottom: 1px solid #26262c; }
-        .live-dot { height: 10px; width: 10px; background-color: #e50914; border-radius: 50%; display: inline-block; }
-        
-        /* Layout Principal */
-        .main-container { display: flex; flex: 1; overflow: hidden; }
-        
-        /* Reproductor de Video */
-        .stream-section { flex: 3; display: flex; flex-direction: column; background-color: #000; }
-        .video-wrapper { flex: 1; display: flex; justify-content: center; align-items: center; }
-        video { width: 100%; height: 100%; max-height: 80vh; background-color: #000; }
-        
-        .stream-info { padding: 15px; background-color: #18181b; border-top: 1px solid #26262c; }
-        .stream-info h1 { font-size: 1.2rem; margin-bottom: 5px; }
-        .stream-info p { font-size: 0.9rem; color: #adadb8; }
-
-        /* Chat */
-        .chat-section { flex: 1; min-width: 300px; max-width: 400px; background-color: #18181b; border-left: 1px solid #26262c; display: flex; flex-direction: column; }
-        .chat-header { padding: 12px; font-weight: bold; font-size: 0.9rem; text-align: center; border-bottom: 1px solid #26262c; }
-        .chat-iframe { flex: 1; border: none; width: 100%; height: 100%; }
-
-        /* Adaptabilidad para Celulares */
-        @media (max-width: 768px) {
-            .main-container { flex-direction: column; overflow: y-scroll; }
-            .chat-section { min-width: 100%; height: 400px; }
+        * { box-sizing: border-box; }
+        body { 
+            background-color: #000; 
+            margin: 0; 
+            padding: 0; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            min-height: 100vh; 
+        }
+        .container {
+            width: 100%;
+            max-width: 900px;
+            padding: 10px;
+        }
+        video { 
+            width: 100%; 
+            height: auto; 
+            border: 1px solid #333; 
+            background-color: #111;
         }
     </style>
 </head>
 <body>
 
-    <header>
-        <span class="live-dot"></span>
-        <strong>TRANSMISIÓN EN VIVO</strong>
-    </header>
-
-    <div class="main-container">
-        <!-- Reproductor de Video -->
-        <div class="stream-section">
-            <div class="video-wrapper">
-                <video controls autoplay muted>
-                    <source src="http://181.167.36.190:8080/radio.webm" type="video/webm">
-                    Tu navegador no soporta reproducción de video.
-                </video>
-            </div>
-            <div class="stream-info">
-                <h1>¡Bienvenidos a mi primer Streaming Propio! 🚀</h1>
-                <p>Transmitido por MiCanal</p>
-            </div>
-        </div>
-
-        <!-- Chat en Vivo (Utilizando Minnit Chat Gratuito) -->
-        <div class="chat-section">
-            <div class="chat-header">CHAT DEL STREAM</div>
-            <iframe class="chat-iframe" src="https://organizations.minnit.chat/102593772607139/c/Main?embed" allowTransparency="true"></iframe>
-        </div>
+    <div class="container">
+        <!-- Atributos para habilitar reproducción en Android e iOS sin forzar pantalla completa -->
+        <video id="video" controls autoplay muted playsinline webkit-playsinline></video>
     </div>
 
+    <script>
+        const videoSrc = 'https://livepeercdn.studio/hls/130aa3hf8mdc3eng/index.m3u8';
+        const video = document.getElementById('video');
+
+        if (Hls.isSupported()) {
+            const hls = new Hls({
+                enableWorker: true,
+                lowLatencyMode: true
+            });
+            hls.loadSource(videoSrc);
+            hls.attachMedia(video);
+            hls.on(Hls.Events.MANIFEST_PARSED, function() {
+                video.play().catch(() => {
+                    // Si el navegador bloquea el autoplay con sonido, reproduce mudo
+                    video.muted = true;
+                    video.play();
+                });
+            });
+        } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+            // Soporte nativo para reproductores móviles (Safari / navegadores específicos)
+            video.src = videoSrc;
+            video.addEventListener('loadedmetadata', function() {
+                video.play();
+            });
+        }
+    </script>
 </body>
 </html>
