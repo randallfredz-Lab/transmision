@@ -3,245 +3,58 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mi Pantalla de Streaming - Kick</title>
+    <title>Transmisión en Vivo</title>
     <style>
-        /* Configuración general de la pantalla */
         body {
             margin: 0;
-            padding: 0;
-            background-color: #0e0e10; /* Fondo negro estilo Kick/Twitch */
-            color: #efeff1;
+            background-color: #0e0e10;
+            color: #ffffff;
             font-family: Arial, sans-serif;
             display: flex;
             flex-direction: column;
             height: 100vh;
-            overflow: hidden;
         }
-
-        /* Barra superior */
         header {
-            padding: 15px 20px;
-            background-color: #1f1f23;
-            border-bottom: 2px solid #26262c;
+            background: #18181b;
+            padding: 10px 20px;
             font-size: 18px;
             font-weight: bold;
-            display: flex;
-            align-items: center;
-            gap: 10px;
+            border-bottom: 2px solid #53fc18;
         }
-
-        .live-dot {
-            width: 10px;
-            height: 10px;
-            background-color: #53fc18; /* Verde Kick */
-            border-radius: 50%;
-            display: inline-block;
-            box-shadow: 0 0 8px #53fc18;
-        }
-
-        /* Contenedor principal (Video + Chat) */
-        main {
-            display: flex;
+        .container {
             flex: 1;
-            overflow: hidden;
-        }
-
-        /* Sección del Video (Izquierda) */
-        .video-section {
-            flex: 3; /* Ocupa el 75% del ancho */
             display: flex;
             flex-direction: column;
-            background-color: #000000;
+            width: 100%;
+            height: 100%;
         }
-
-        .video-wrapper {
-            flex: 1;
+        .stream-wrapper {
             position: relative;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background-color: #000;
+            width: 100%;
+            height: 0;
+            padding-bottom: 56.25%; /* Proporción 16:9 */
         }
-
-        /* El iframe oficial de Kick integrado */
         .stream-iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
             width: 100%;
             height: 100%;
             border: none;
         }
-
-        /* Información debajo del video */
-        .stream-info {
-            padding: 20px;
-            background-color: #18181c;
-            border-top: 1px solid #26262c;
-        }
-
-        .stream-title {
-            font-size: 20px;
-            font-weight: bold;
-            margin: 0 0 5px 0;
-        }
-
-        .stream-user {
-            color: #adadb8;
-            font-size: 14px;
-            margin: 0;
-        }
-
-        /* Sección del Chat (Derecha) */
-        .chat-section {
-            flex: 1; /* Ocupa el 25% del ancho */
-            background-color: #18181c;
-            border-left: 2px solid #26262c;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .chat-header {
-            padding: 15px;
-            font-weight: bold;
-            font-size: 14px;
-            text-transform: uppercase;
-            border-bottom: 1px solid #26262c;
-            text-align: center;
-            color: #adadb8;
-        }
-
-        /* Lista de mensajes */
-        .chat-messages {
-            flex: 1;
-            padding: 15px;
-            overflow-y: auto;
-            list-style-type: none;
-            margin: 0;
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-
-        .chat-messages li {
-            font-size: 14px;
-            line-height: 1.4;
-            word-break: break-word;
-        }
-
-        .user-name {
-            font-weight: bold;
-            margin-right: 5px;
-        }
-
-        /* Zona para escribir mensajes */
-        .chat-input-area {
-            padding: 15px;
-            background-color: #18181c;
-            border-top: 1px solid #26262c;
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-
-        .chat-input-area input {
-            padding: 10px;
-            background-color: #2a2a32;
-            border: 2px solid transparent;
-            color: white;
-            border-radius: 6px;
-            font-size: 14px;
-            outline: none;
-        }
-
-        .chat-input-area input:focus {
-            border-color: #53fc18;
-        }
-
-        .chat-buttons {
-            display: flex;
-            gap: 8px;
-        }
-
-        .btn-send {
-            flex: 1;
-            padding: 10px;
-            background-color: #53fc18;
-            color: #000;
-            border: none;
-            font-weight: bold;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 14px;
-        }
-
-        .btn-send:hover {
-            background-color: #42cb12;
-        }
-
-        /* Diseño para Celulares (Responsive) */
-        @media (max-width: 768px) {
-            main {
-                flex-direction: column;
-            }
-            .video-section {
-                flex: none;
-                height: 35vh;
-            }
-            .stream-info {
-                display: none;
-            }
-            .chat-section {
-                flex: 1;
-            }
-        }
     </style>
 </head>
 <body>
-
-    <!-- Barra superior -->
-    <header>
-        <span class="live-dot"></span>
-        <span>TRANSMISIÓN EN VIVO - KICK</span>
-    </header>
-
-    <main>
-        
-        <!-- IZQUIERDA: REPRODUCTOR DE KICK Y TÍTULO -->
-        <div class="video-section">
-            <div class="video-wrapper">
-                <!-- Reproductor Oficial Integrado de Kick -->
-                <iframe 
-                    class="stream-iframe" 
-                    src="https://player.kick.com/carter-nash" 
-                    allowfullscreen="true" 
-                    scrolling="no">
-                </iframe>
-            </div>
-            <div class="stream-info">
-                <h1 class="stream-title">¡Transmitiendo con mi puente de Python en Kick! 🚀</h1>
-                <p class="stream-user">Canal oficial de Kick: carter_nash</p>
-            </div>
+    <header>🟢 TRANSMISIÓN EN VIVO - KICK</header>
+    <div class="container">
+        <div class="stream-wrapper">
+            <iframe 
+                class="stream-iframe" 
+                src="https://player.kick.com/carter-nash" 
+                allow="autoplay; encrypted-media; fullscreen"
+                allowfullscreen="true">
+            </iframe>
         </div>
-
-        <!-- DERECHA: CAJA DE CHAT -->
-        <div class="chat-section">
-            <div class="chat-header">Chat del stream</div>
-            
-            <ul class="chat-messages">
-                <li><span class="user-name" style="color:#ff6b6b;">Carlos_Dev:</span> ¡Qué buen diseño! Se ve directo desde la web.</li>
-                <li><span class="user-name" style="color:#4dabf7;">Marta99:</span> ¡Excelente calidad de video!</li>
-                <li><span class="user-name" style="color:#51cf66;">StreamerBot:</span> Bienvenidos todos al chat en vivo.</li>
-            </ul>
-
-            <!-- Inputs para escribir -->
-            <div class="chat-input-area">
-                <div class="chat-buttons">
-                    <input type="text" placeholder="Tu Apodo" style="width: 35%;">
-                    <input type="text" placeholder="Escribe un mensaje..." style="flex: 1;">
-                </div>
-                <button class="btn-send">Enviar Mensaje</button>
-            </div>
-        </div>
-
-    </main>
-
+    </div>
 </body>
 </html>
