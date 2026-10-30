@@ -13,37 +13,82 @@
             display: flex;
             flex-direction: column;
             height: 100vh;
+            overflow: hidden;
         }
         header {
             background: #18181b;
             padding: 10px 20px;
-            font-size: 18px;
+            font-size: 16px;
             font-weight: bold;
             border-bottom: 2px solid #53fc18;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
-        .container {
+        .header-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        /* Botón para administrar/ocultar el chat */
+        .toggle-chat-btn {
+            background-color: #2b2b2b;
+            color: #53fc18;
+            border: 1px solid #53fc18;
+            padding: 5px 12px;
+            font-size: 13px;
+            font-weight: bold;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .toggle-chat-btn:hover {
+            background-color: #53fc18;
+            color: #000;
+        }
+        /* Contenedor principal */
+        .main-container {
             flex: 1;
             display: flex;
-            flex-direction: column;
             width: 100%;
-            height: 100%;
+            height: calc(100vh - 45px);
             position: relative;
         }
-        .stream-wrapper {
+        /* Área para el video */
+        .stream-container {
+            flex: 1;
             position: relative;
-            width: 100%;
-            height: 0;
-            padding-bottom: 56.25%; /* Proporción 16:9 */
+            background: #000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: all 0.3s ease;
         }
         .stream-iframe {
-            position: absolute;
-            top: 0;
-            left: 0;
             width: 100%;
             height: 100%;
             border: none;
         }
-        /* Capa táctil para desbloquear audio en celulares */
+        /* Panel del chat a la derecha (con opción de ocultarse) */
+        .chat-container {
+            width: 340px;
+            height: 100%;
+            background: #18181b;
+            border-left: 1px solid #2f2f35;
+            transition: width 0.3s ease, opacity 0.3s ease;
+        }
+        .chat-iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+        /* Clase para colapsar el chat por completo */
+        .chat-hidden {
+            width: 0 !important;
+            opacity: 0;
+            overflow: hidden;
+            border-left: none;
+        }
+        /* Capa táctil para desbloquear audio */
         .unmute-overlay {
             position: absolute;
             top: 0;
@@ -71,10 +116,14 @@
     </style>
 </head>
 <body>
-    <header>🟢 TRANSMISIÓN EN VIVO - KICK</header>
-    <div class="container">
-        <div class="stream-wrapper">
-            <!-- Botón flotante para interactuar y quitar el mute -->
+    <header>
+        <div class="header-title">🟢 TRANSMISIÓN EN VIVO - KICK</div>
+        <button class="toggle-chat-btn" onclick="toggleChat()">💬 Administrar Chat</button>
+    </header>
+    
+    <div class="main-container">
+        <!-- Izquierda: Reproductor de Video con soporte de Pantalla Completa nativo -->
+        <div class="stream-container" id="streamBox">
             <div id="overlay" class="unmute-overlay" onclick="activarSonido()">
                 <button class="unmute-btn">🔊 Toca aquí para activar el audio</button>
             </div>
@@ -87,16 +136,30 @@
                 allowfullscreen="true">
             </iframe>
         </div>
+
+        <!-- Derecha: Chat Integrado administrable -->
+        <div class="chat-container" id="chatBox">
+            <iframe 
+                id="kick-chat"
+                class="chat-iframe" 
+                src="https://kick.com/carter-nash/chatroom" 
+                frameborder="0">
+            </iframe>
+        </div>
     </div>
 
     <script>
         function activarSonido() {
             var overlay = document.getElementById('overlay');
-            // Oculta el cartel al tocarlo
             overlay.style.opacity = '0';
             setTimeout(function() {
                 overlay.style.display = 'none';
             }, 300);
+        }
+
+        function toggleChat() {
+            var chatBox = document.getElementById('chatBox');
+            chatBox.classList.toggle('chat-hidden');
         }
     </script>
 </body>
