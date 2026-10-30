@@ -30,7 +30,6 @@
             align-items: center;
             gap: 10px;
         }
-        /* Botón para administrar/ocultar el chat */
         .toggle-chat-btn {
             background-color: #2b2b2b;
             color: #53fc18;
@@ -45,7 +44,6 @@
             background-color: #53fc18;
             color: #000;
         }
-        /* Contenedor principal */
         .main-container {
             flex: 1;
             display: flex;
@@ -53,7 +51,6 @@
             height: calc(100vh - 45px);
             position: relative;
         }
-        /* Área para el video */
         .stream-container {
             flex: 1;
             position: relative;
@@ -68,7 +65,6 @@
             height: 100%;
             border: none;
         }
-        /* Panel del chat a la derecha (con opción de ocultarse) */
         .chat-container {
             width: 340px;
             height: 100%;
@@ -81,14 +77,12 @@
             height: 100%;
             border: none;
         }
-        /* Clase para colapsar el chat por completo */
         .chat-hidden {
             width: 0 !important;
             opacity: 0;
             overflow: hidden;
             border-left: none;
         }
-        /* Capa táctil para desbloquear audio */
         .unmute-overlay {
             position: absolute;
             top: 0;
@@ -122,7 +116,6 @@
     </header>
     
     <div class="main-container">
-        <!-- Izquierda: Reproductor de Video con soporte de Pantalla Completa nativo -->
         <div class="stream-container" id="streamBox">
             <div id="overlay" class="unmute-overlay" onclick="activarSonido()">
                 <button class="unmute-btn">🔊 Toca aquí para activar el audio</button>
@@ -137,12 +130,12 @@
             </iframe>
         </div>
 
-        <!-- Derecha: Chat Integrado administrable -->
         <div class="chat-container" id="chatBox">
+            <!-- URL corregida al modo popout para permitir login y comentarios -->
             <iframe 
                 id="kick-chat"
                 class="chat-iframe" 
-                src="https://kick.com/carter-nash/chatroom" 
+                src="https://kick.com/popout/carter-nash/chat" 
                 frameborder="0">
             </iframe>
         </div>
