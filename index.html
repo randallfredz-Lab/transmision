@@ -69,27 +69,93 @@
             height: 100%;
             border: none;
         }
-        .chat-container {
+
+        /* ESTILOS DEL CHAT NATIVO (DEL HTML VIEJO) */
+        .chat-section {
             width: 340px;
             height: 100%;
-            background: #18181b;
-            border-left: 1px solid #2f2f35;
-            transition: width 0.3s ease, opacity 0.3s ease, height 0.3s ease;
-            flex-shrink: 0;
+            background-color: #18181c;
+            border-left: 2px solid #26262c;
             display: flex;
             flex-direction: column;
+            flex-shrink: 0;
+            box-sizing: border-box;
         }
-        .chat-iframe {
-            width: 100%;
-            height: 100%;
+
+        .chat-header {
+            padding: 12px;
+            font-weight: bold;
+            font-size: 14px;
+            text-transform: uppercase;
+            border-bottom: 1px solid #26262c;
+            text-align: center;
+            color: #adadb8;
+        }
+
+        .chat-messages {
+            flex: 1;
+            padding: 15px;
+            overflow-y: auto;
+            list-style-type: none;
+            margin: 0;
+        }
+
+        .chat-messages li {
+            margin-bottom: 12px;
+            font-size: 14px;
+            line-height: 1.4;
+            word-break: break-word;
+        }
+
+        .user-name {
+            font-weight: bold;
+            color: #53fc18;
+            margin-right: 5px;
+        }
+
+        .chat-input-area {
+            padding: 15px;
+            background-color: #18181c;
+            border-top: 1px solid #26262c;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .chat-input-area input {
+            padding: 10px;
+            background-color: #2a2a32;
+            border: 2px solid transparent;
+            color: white;
+            border-radius: 6px;
+            font-size: 14px;
+            outline: none;
+        }
+
+        .chat-input-area input:focus {
+            border-color: #53fc18;
+        }
+
+        .chat-buttons {
+            display: flex;
+            gap: 8px;
+        }
+
+        .btn-send {
+            padding: 10px;
+            background-color: #53fc18;
+            color: black;
             border: none;
+            font-weight: bold;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
         }
-        .chat-hidden {
-            width: 0 !important;
-            opacity: 0;
-            overflow: hidden;
-            border-left: none;
+
+        .btn-send:hover {
+            background-color: #3ec410;
         }
+
         .unmute-overlay {
             position: absolute;
             top: 0;
@@ -104,6 +170,7 @@
             cursor: pointer;
             transition: opacity 0.3s ease;
         }
+
         .unmute-btn {
             background-color: #53fc18;
             color: #000000;
@@ -130,18 +197,12 @@
                 height: 55vh;
                 flex: none;
             }
-            .chat-container {
+            .chat-section {
                 width: 100% !important;
                 height: 45vh;
                 border-left: none;
                 border-top: 1px solid #2f2f35;
                 flex: none;
-            }
-            .chat-hidden {
-                width: 100% !important;
-                height: 0 !important;
-                opacity: 0;
-                border-top: none;
             }
         }
     </style>
@@ -167,14 +228,21 @@
             </iframe>
         </div>
 
-        <div class="chat-container" id="chatBox">
-            <!-- Chat libre integrado: Permite ingresar con cualquier apodo de forma anónima -->
-            <iframe 
-                id="kick-chat"
-                class="chat-iframe" 
-                src="https://www.chatango.com/direct?name=transmisioncarternash&amp;s=1" 
-                frameborder="0">
-            </iframe>
+        <!-- SECCIÓN DE CHAT LIBRE NATIVO SIN REGISTRO NI ANUNCIOS -->
+        <div class="chat-section" id="chatBox">
+            <div class="chat-header">Chat del stream</div>
+            
+            <ul class="chat-messages" id="chatMessages">
+                <li><span class="user-name">StreamBot:</span> ¡Bienvenidos al chat en vivo! Escribe tu apodo y mensaje abajo.</li>
+            </ul>
+
+            <div class="chat-input-area">
+                <div class="chat-buttons">
+                    <input type="text" id="userNick" placeholder="Tu Apodo" style="width: 35%;">
+                    <input type="text" id="userMsg" placeholder="Escribe un mensaje..." style="flex: 1;" onkeypress="checkEnter(event)">
+                </div>
+                <button class="btn-send" onclick="enviarMensaje()">Enviar Mensaje</button>
+            </div>
         </div>
     </div>
 
@@ -206,6 +274,29 @@
                 } else if (document.msExitFullscreen) {
                     document.msExitFullscreen();
                 }
+            }
+        }
+
+        function enviarMensaje() {
+            var nickInput = document.getElementById('userNick');
+            var msgInput = document.getElementById('userMsg');
+            var chatList = document.getElementById('chatMessages');
+
+            var nick = nickInput.value.trim() || 'Anónimo';
+            var msg = msgInput.value.trim();
+
+            if (msg !== '') {
+                var li = document.createElement('li');
+                li.innerHTML = '<span class="user-name">' + nick + ':</span> ' + msg;
+                chatList.appendChild(li);
+                chatList.scrollTop = chatList.scrollHeight;
+                msgInput.value = '';
+            }
+        }
+
+        function checkEnter(e) {
+            if (e.key === 'Enter') {
+                enviarMensaje();
             }
         }
     </script>
