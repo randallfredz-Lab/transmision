@@ -76,6 +76,8 @@
             border-left: 1px solid #2f2f35;
             transition: width 0.3s ease, opacity 0.3s ease, height 0.3s ease;
             flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
         }
         .chat-iframe {
             width: 100%;
@@ -146,7 +148,7 @@
 </head>
 <body>
     <header>
-        <div class="header-title">🟢 TRANSMISIÓN EN VIVO - KICK</div>
+        <div class="header-title">🟢 TRANSMISIÓN EN VIVO</div>
         <button class="toggle-chat-btn" onclick="toggleFullScreen()">🖥️ Pantalla Completa</button>
     </header>
     
@@ -166,10 +168,11 @@
         </div>
 
         <div class="chat-container" id="chatBox">
+            <!-- Chat libre integrado: Permite ingresar con cualquier apodo de forma anónima -->
             <iframe 
                 id="kick-chat"
                 class="chat-iframe" 
-                src="https://kick.com/popout/carter-nash/chat" 
+                src="https://www.chatango.com/direct?name=transmisioncarternash&amp;s=1" 
                 frameborder="0">
             </iframe>
         </div>
@@ -185,19 +188,17 @@
         }
 
         function toggleFullScreen() {
-            var elem = document.documentElement; // Toma toda la página web
+            var elem = document.documentElement;
             
-            // Si no está en pantalla completa, la activa
             if (!document.fullscreenElement && !document.webkitFullscreenElement && !document.msFullscreenElement) {
                 if (elem.requestFullscreen) {
                     elem.requestFullscreen();
-                } else if (elem.webkitRequestFullscreen) { /* Safari */
+                } else if (elem.webkitRequestFullscreen) {
                     elem.webkitRequestFullscreen();
-                } else if (elem.msRequestFullscreen) { /* IE11 */
+                } else if (elem.msRequestFullscreen) {
                     elem.msRequestFullscreen();
                 }
             } else {
-                // Si ya estaba en pantalla completa, la sale
                 if (document.exitFullscreen) {
                     document.exitFullscreen();
                 } else if (document.webkitExitFullscreen) {
